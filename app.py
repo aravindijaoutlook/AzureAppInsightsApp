@@ -24,9 +24,6 @@ def home():
     <p>Home Page</p>
     <ul>
         <li><a href="/login">Login</a></li>
-        <li><a href="/dashboard">Dashboard</a></li>
-        <li><a href="/profile">Profile</a></li>
-        <li><a href="/checkout">Checkout</a></li>
     </ul>
     """
 
@@ -37,35 +34,5 @@ def login():
     <p>User authentication goes here.</p>
     <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="/dashboard">Dashboard</a></li>
-        <li><a href="/profile">Profile</a></li>
-        <li><a href="/checkout">Checkout</a></li>
     </ul>
     """
-
-@app.route('/dashboard')
-def dashboard():
-    return """
-    <h1>Dashboard</h1>
-    <p>User activities and analytics.</p>
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/profile">Profile</a></li>
-        <li><a href="/checkout">Checkout</a></li>
-    </ul>
-    """
-
-@app.route('/profile')
-def profile():
-    return """
-    <h1>Profile Page</h1>
-    <p>User details and settings.</p>
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/dashboard">Dashboard</li>
-        <li><a href="/checkout">Checkout</a></li>
-    </ul>
-    """
-
