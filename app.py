@@ -1,26 +1,71 @@
-from flask import Flask, render_template
+from flask import Flask
+from opencensus.ext.azure.trace_exporter import AzureExporter
+from opencensus.trace.samplers import ProbabilitySampler
+from opencensus.trace.tracer import Tracer
 
 app = Flask(__name__)
 
+exporter = AzureExporter(connection_string="InstrumentationKey=f8c71174-072c-405e-9a41-e4f6c5f5c0bb")
+tracer = Tracer(exporter=exporter, sampler=ProbabilitySampler(1.0))
+
+@app.before_request
+def before_request():
+    tracer.start_span(name="Flask Request")
+
+@app.after_request
+def after_request(response):
+    tracer.end_span()
+    return response
+
 @app.route('/')
 def home():
-    return "<h1>Welcome to My Flask App</h1><p>Home Page</p>"
+    return """
+    <h1>Welcome to My Flask App</h1>
+    <p>Home Page</p>
+    <ul>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/checkout">Checkout</a></li>
+    </ul>
+    """
 
 @app.route('/login')
 def login():
-    return "<h1>Login Page</h1><p>User authentication goes here.</p>"
+    return """
+    <h1>Login Page</h1>
+    <p>User authentication goes here.</p>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/checkout">Checkout</a></li>
+    </ul>
+    """
 
 @app.route('/dashboard')
 def dashboard():
-    return "<h1>Dashboard</h1><p>User activities and analytics.</p>"
+    return """
+    <h1>Dashboard</h1>
+    <p>User activities and analytics.</p>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/checkout">Checkout</a></li>
+    </ul>
+    """
 
 @app.route('/profile')
 def profile():
-    return "<h1>Profile Page</h1><p>User details and settings.</p>"
+    return """
+    <h1>Profile Page</h1>
+    <p>User details and settings.</p>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/dashboard">Dashboard</li>
+        <li><a href="/checkout">Checkout</a></li>
+    </ul>
+    """
 
-@app.route('/checkout')
-def checkout():
-    return "<h1>Checkout Page</h1><p>Complete your purchase here.</p>"
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
