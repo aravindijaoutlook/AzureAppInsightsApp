@@ -5,7 +5,7 @@ from opencensus.trace.tracer import Tracer
 
 app = Flask(__name__)
 
-exporter = AzureExporter(connection_string="InstrumentationKey=f8c71174-072c-405e-9a41-e4f6c5f5c0bb")
+exporter = AzureExporter(connection_string="InstrumentationKey=f8c71174-072c-405e-9a41-e4f6c5f5c0bb;")
 tracer = Tracer(exporter=exporter, sampler=ProbabilitySampler(1.0))
 
 @app.before_request
