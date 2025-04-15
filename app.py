@@ -1,38 +1,27 @@
-from flask import Flask
-from opencensus.ext.azure.trace_exporter import AzureExporter
-from opencensus.trace.samplers import ProbabilitySampler
-from opencensus.trace.tracer import Tracer
+from flask import Flask, render_template, redirect, url_for
+from opencensus.ext.azure.log_exporter import AzureLogHandler
+import logging
 
 app = Flask(__name__)
 
-exporter = AzureExporter(connection_string="InstrumentationKey=f8c71174-072c-405e-9a41-e4f6c5f5c0bb")
-tracer = Tracer(exporter=exporter, sampler=ProbabilitySampler(1.0))
-
-@app.before_request
-def before_request():
-    tracer.start_span(name="Flask Request")
-
-@app.after_request
-def after_request(response):
-    tracer.end_span()
-    return response
+# Azure Application Insights integration
+logger = logging.getLogger(__name__)
+logger.addHandler(AzureLogHandler(connection_string='InstrumentationKey=f8c71174-072c-405e-9a41-e4f6c5f5c0bb'))
 
 @app.route('/')
 def home():
-    return """
-    <h1>Welcome to My Flask App</h1>
-    <p>Home Page</p>
-    <ul>
-        <li><a href="/login">Login</a></li>
-    </ul>
-    """
+    logger.info("Home page accessed")
+    return render_template('home.html')
 
 @app.route('/login')
 def login():
-    return """
-    <h1>Login Page</h1>
-    <p>User authentication goes here.</p>
-    <ul>
-        <li><a href="/">Home</a></li>
-    </ul>
-    """
+    logger.info("Login page accessed")
+    return render_template('login.html')
+
+@app.route('/dashboard')
+def dashboard():
+    logger.info("Dashboard page accessed")
+    return render_template('dashboard.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
